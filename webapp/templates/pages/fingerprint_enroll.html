@@ -313,6 +313,31 @@
         let enrollmentComplete = false;
     
         $(document).ready(function() {
+            $('.staff-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = $(this);
+                const formData = new FormData(form[0]);
+                
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#fingerprint_id').val('');
+                        $('#backup_fingerprint_id').val('');
+                        $('#mainFingerprint').removeClass('success').addClass('active');
+                        $('#backupFingerprint').removeClass('success').addClass('active');
+                        enrollmentComplete = false;
+                        form[0].reset();
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr.responseText);
+                    }
+                });
+            });
+
             $.ajax({
                 url: '/fingerprint/mode',
                 type: 'POST',
